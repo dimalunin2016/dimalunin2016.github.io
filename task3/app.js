@@ -3,7 +3,7 @@ function addList(list, text) {
     par.append('<span>' + text + '</span>');
     par.append('<button class="deleter">').text("Удалить");
     $(".deleter").click(function () {
-        $(this).parent().get(0).remove();
+        $(this).parent().remove();
     });
 }
 $(document).ready(function () {
