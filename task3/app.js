@@ -1,7 +1,7 @@
 function addList(list, text) {
     var par = list.append('<li></li>').find('li').last();
     par.append('<span>' + text + '</span>');
-    par.append('<input type="button" class="deleter" value="Удалить">');
+    par.append('<button class="deleter">').text("Удалить");
     $(".deleter").click(function () {
         $(this).parent().get(0).remove();
     });
