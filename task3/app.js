@@ -1,7 +1,10 @@
 function addList(list, text) {
     var par = list.append('<li></li>').find('li').last();
     par.append('<span>' + text + '</span>');
-    par.append('<input type="button" id="clear" value="Удалить">');
+    par.append('<input type="button" class="deleter" value="Удалить">');
+    $(".deleter").click(function () {
+        $(this).parent().get(0).remove();
+    });
 }
 $(document).ready(function () {
     var list = $("#root").append('<ul></ul>').find('ul');
@@ -11,8 +14,6 @@ $(document).ready(function () {
     $("#add_task").click(function () {
         addList(list, $('#add_task_input').val());
     });
-    $("#root").on('click', '#clear', function () {
-        $(this).parent().get(0).remove();
-    });
+
 });
 
