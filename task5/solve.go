@@ -9,7 +9,8 @@ var urls map[string]string
 
 func getAns(url string) string {
     ans := ""
-    for i := len(urls) + 1; i > 0; i /= 26 {
+    i := len(urls) + 1
+    for ; i > 0; i /= 26 {
         ans += string('a' + i % 26);
     }
     urls[ans] = url
@@ -20,11 +21,11 @@ type Req struct {
     url string `json:"url"`
 }
 
-func function(w http.ResponseWriter, r *http.Request) {
+func handler(w http.ResponseWriter, r *http.Request) {
     if r.Method == "POST" {
         var req Req
-        decoder := json.NewDecoder(r.Body)
-        er := decoder.Decode(&req)
+        dec := json.NewDecoder(r.Body)
+        er := dec.Decode(&req)
         if er != nil || req.url == "" {
             http.Error(w, "some error", 400)
             return
@@ -35,7 +36,7 @@ func function(w http.ResponseWriter, r *http.Request) {
         w.Write(res)
     } else if r.Method == "GET" {
         cUrl := r.RequestURI[1:]
-        dUrl, ex := urls[cUrl] 
+        dUrl, ex := urls[cUrl]
         if !ex {
             http.Error(w, "not found", 404)
             return
@@ -43,8 +44,9 @@ func function(w http.ResponseWriter, r *http.Request) {
         http.Redirect(w, r, dUrl, 301)
     }
 }
+
 func main() {
     urls = make(map[string] string)
-    http.HandleFunc("/",  function)
+    http.HandleFunc("/",  handler)
     http.ListenAndServe(":8082", nil)
 }
