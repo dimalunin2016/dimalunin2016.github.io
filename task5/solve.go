@@ -11,29 +11,32 @@ func getAns(url string) string {
     ans := ""
     i := len(urls) + 1
     for ; i > 0; i /= 26 {
-        ans += string('a' + i % 26);
+        ans += string('a' + i % 26)
     }
     urls[ans] = url
     return ans
 }
 
 type Req struct {
-    url string `json:"url"`
+    Url string `json:"url"`
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
     if r.Method == "POST" {
         var req Req
+
         dec := json.NewDecoder(r.Body)
-        er := dec.Decode(&req)
-        if er != nil || req.url == "" {
-            http.Error(w, "some error", 400)
+        err := dec.Decode(&req)
+
+        if err != nil || req.Url == "" {
+            http.Error(w, "", 400)
             return
         }
+
         rMap := make(map[string]string)
-        rMap["key"] = getAns(req.url)
-        res, _ := json.Marshal(rMap)
-        w.Write(res)
+        rMap["key"] = getAns(req.Url)
+        respon, _ := json.Marshal(rMap)
+        w.Write(respon)
     } else if r.Method == "GET" {
         cUrl := r.RequestURI[1:]
         dUrl, ex := urls[cUrl]
@@ -46,7 +49,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    urls = make(map[string] string)
-    http.HandleFunc("/",  handler)
+    urls = make(map[string]string)
+    http.HandleFunc("/", handler)
     http.ListenAndServe(":8082", nil)
 }
+
