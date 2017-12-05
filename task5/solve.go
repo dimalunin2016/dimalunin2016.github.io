@@ -23,10 +23,8 @@ type Req struct {
 func function(w http.ResponseWriter, r *http.Request) {
     if r.Method == "POST" {
         var req Req
-
         decoder := json.NewDecoder(r.Body)
         er := decoder.Decode(&req)
-
         if er != nil || req.url == "" {
             http.Error(w, "some error", 400)
             return
@@ -35,7 +33,7 @@ func function(w http.ResponseWriter, r *http.Request) {
         rMap["key"] = getAns(req.url)
         res, _ := json.Marshal(rMap)
         w.Write(res)
-    } else {
+    } else if r.Method == "GET" {
         cUrl := r.RequestURI[1:]
         dUrl, ex := urls[cUrl] 
         if !ex {
