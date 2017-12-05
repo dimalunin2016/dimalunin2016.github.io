@@ -27,7 +27,7 @@ func function(w http.ResponseWriter, r *http.Request) {
 
         decoder := json.NewDecoder(r.Body)
         er := decoder.Decode(&req)
-        if er != nil {
+        if er != nil || ureq.url == "" {
             http.Error(w, "", 400)
             return
         }
@@ -39,7 +39,7 @@ func function(w http.ResponseWriter, r *http.Request) {
         cUrl := r.RequestURI[1:]
         dUrl, ex := urls[cUrl] 
         if !ex {
-            http.Error(w, "url not found", 404)
+            http.Error(w, "", 404)
             return
         }
         http.Redirect(w, r, dUrl, 301)
