@@ -26,15 +26,22 @@ func function(w http.ResponseWriter, r *http.Request) {
         var req Req
 
         decoder := json.NewDecoder(r.Body)
-        decoder.Decode(&req)
-
+        er := decoder.Decode(&req)
+        if er != nil {
+            http.Error(w, "", 400)
+            return
+        }
         rMap := make(map[string]string)
         rMap["key"] = getAns(req.url)
         res, _ := json.Marshal(rMap)
         w.Write(res)
     } else {
         cUrl := r.RequestURI[1:]
-        dUrl, _ := urls[cUrl] 
+        dUrl, ex := urls[cUrl] 
+        if !ex {
+            http.Error(w, "url not found", 404)
+            return
+        }
         http.Redirect(w, r, dUrl, 301)
     }
 }
