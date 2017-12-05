@@ -27,7 +27,7 @@ func function(w http.ResponseWriter, r *http.Request) {
 
         decoder := json.NewDecoder(r.Body)
         er := decoder.Decode(&req)
-        if er != nil || ureq.url == "" {
+        if er != nil || req.url == "" {
             http.Error(w, "", 400)
             return
         }
