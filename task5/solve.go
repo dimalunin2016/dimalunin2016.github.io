@@ -28,14 +28,14 @@ func function(w http.ResponseWriter, r *http.Request) {
         decoder := json.NewDecoder(r.Body)
         er := decoder.Decode(&req)
         if er != nil || req.url == "" {
-            http.Error(w, "", 400)
+            http.Error(w, "some error", 400)
             return
         }
         rMap := make(map[string]string)
         rMap["key"] = getAns(req.url)
         res, _ := json.Marshal(rMap)
         w.Write(res)
-    } else {
+    } else if r.Method == "GET"{
         cUrl := r.RequestURI[1:]
         dUrl, ex := urls[cUrl] 
         if !ex {
